@@ -1,48 +1,79 @@
 //DinnerModel Object constructor
 var DinnerModel = function() {
- 
-	//TODO Lab 1 implement the data structure that will hold number of guest
-	// and selected dishes for the dinner menu
 
+  this.numberOfGuests = 0
+
+  this.menu = []
 
 	this.setNumberOfGuests = function(num) {
-		//TODO Lab 1
-	}
-	
-	this.getNumberOfGuests = function() {
-		//TODO Lab 1
+    this.numberOfGuests = num;
 	}
 
-	//Returns the dish that is on the menu for selected type 
+	this.getNumberOfGuests = function() {
+    return this.numberOfGuests;
+	}
+
+	//Returns the dish that is on the menu for selected type
 	this.getSelectedDish = function(type) {
-		//TODO Lab 1
+		return this.getFullMenu().filter(function(dish) {
+      return dish.type === type;
+    }).pop();
 	}
 
 	//Returns all the dishes on the menu.
 	this.getFullMenu = function() {
-		//TODO Lab 1
+    return this.menu
 	}
 
 	//Returns all ingredients for all the dishes on the menu.
 	this.getAllIngredients = function() {
-		//TODO Lab 1
+    return this.menu.map(function(dish) {
+      return dish.ingredients;
+    }).reduce(function(a, c) {
+      return a.concat(c);
+    }, []);
 	}
+
+  // Temporary helper for sidebar items
+  this.getDishPrice = function(dish) {
+    return dish.ingredients.reduce(function(a, c) {
+      return a + c.price
+    }, 0);
+  }
 
 	//Returns the total price of the menu (all the ingredients multiplied by number of guests).
 	this.getTotalMenuPrice = function() {
-		//TODO Lab 1
+	   var menuIngredients = this.getAllIngredients()
+     return menuIngredients.reduce(function(a, c) {
+       return a + c.price * this.getNumberOfGuests()
+     }, 0);
 	}
 
 	//Adds the passed dish to the menu. If the dish of that type already exists on the menu
 	//it is removed from the menu and the new one added.
 	this.addDishToMenu = function(id) {
-		//TODO Lab 1 
+    var currentDish = this.getDish(id);
+
+    var dishFound = this.menu.filter(function(dish) {
+      return dish.type === currentDish.type;
+    });
+
+		if (dishFound) {
+      this.removeDishFromMenu(dishFound.id);
+      this.menu.push(currentDish);
+    }
 	}
 
 	//Removes dish from menu
 	this.removeDishFromMenu = function(id) {
-		//TODO Lab 1
+		return this.menu.filter(function(dish) {
+      return dish.id !== id;
+    });
 	}
+
+  this.getEveryDish = function(){
+    return dishes;
+  }
 
 	//function that returns all dishes of specific type (i.e. "starter", "main dish" or "dessert")
 	//you can use the filter argument to filter out the dish by name or ingredient (use for search)
@@ -63,7 +94,7 @@ var DinnerModel = function() {
 			}
 		}
 	  	return dish.type == type && found;
-	  });	
+	  });
 	}
 
 	//function that returns a dish of specific ID
@@ -76,11 +107,11 @@ var DinnerModel = function() {
 	}
 
 
-	// the dishes variable contains an array of all the 
+	// the dishes variable contains an array of all the
 	// dishes in the database. each dish has id, name, type,
 	// image (name of the image file), description and
-	// array of ingredients. Each ingredient has name, 
-	// quantity (a number), price (a number) and unit (string 
+	// array of ingredients. Each ingredient has name,
+	// quantity (a number), price (a number) and unit (string
 	// defining the unit i.e. "g", "slices", "ml". Unit
 	// can sometimes be empty like in the example of eggs where
 	// you just say "5 eggs" and not "5 pieces of eggs" or anything else.

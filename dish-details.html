@@ -11,16 +11,31 @@
   <body>
     <nav class="navbar">
       <h1 class="navbar__header">Dinner planner</h1>
+      <div id="hamburger" class="hamburger-wrapper">
+        <div class="hamburger"></div>
+      </div>
     </nav>
 
     <div class="container-fluid">
 
-      <div id="welcome" class="welcome">
-        <p class="welcome__text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-        </p>
-        <button id="start-btn" class="btn btn--primary">Create new dinner</button>
-      </div>
+      <div class="app">
 
+        <div id="sidebar" class="sidebar">
+          <h3>My dinner</h3>
+          <label>
+            Guests: <input class="guests-input" type="number" value="1" min="0"/>
+          </label>
+          <div class="sidebar__separator">
+            <span>Dish Name</span>
+            <span>Cost</span>
+          </div>
+          <!-- <ul class="selected-dishes"></ul>
+          <button class="btn btn--primary confirm-dinner">Confirm Dinner</button> -->
+        </div>
+
+        <div id="dish-details"></div>
+
+      </div>
     </div>
 
     <!-- jQuery -->
