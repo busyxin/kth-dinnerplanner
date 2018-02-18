@@ -1,18 +1,19 @@
 //DinnerModel Object constructor
 var DinnerModel = function() {
 
-  var numberOfGuests = 0
+  var numberOfGuests = 1;
 
-  // var menu = {
-  //   starter: '',
-  //   maindish: '',
-  //   dessert: ''
-  // }
+  var menu = {
+    'starter': null,
+    'main dish': null,
+    'dessert': null
+  }
 
-  var menu = [];
+  var observers = [];
 
 	this.setNumberOfGuests = function(num) {
     numberOfGuests = num;
+    this.notifyObservers({guests: num});
 	}
 
 	this.getNumberOfGuests = function() {
@@ -21,99 +22,111 @@ var DinnerModel = function() {
 
 	//Returns the dish that is on the menu for selected type
 	this.getSelectedDish = function(type) {
-		return this.getFullMenu().filter(function(dish) {
-      return dish.type === type;
-    }).pop();
+    return this.getDish(menu[type]);
 	}
 
-	//Returns all the dishes on the menu.
+	//Returns all the dishes on the menu. Return an array of dish for convenience
 	this.getFullMenu = function() {
-    return menu
+    var dishArray = [];
+
+    for (var type in menu) {
+      if (menu[type]) {
+        var dish = this.getDish(menu[type]);
+        dishArray.push(dish);
+      }
+    }
+
+    return dishArray;
 	}
 
 	//Returns all ingredients for all the dishes on the menu.
 	this.getAllIngredients = function() {
-    return menu.map(function(dish) {
+    return this.getFullMenu().map(function(dish) {
       return dish.ingredients;
     }).reduce(function(a, c) {
       return a.concat(c);
     }, []);
 	}
 
-  // Temporary helper for sidebar items
-  this.getDishPrice = function(dish) {
-    if (!dish) return;
+  function precisionRound(number, precision) {
+    var factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+  }
 
-    return dish.ingredients.reduce(function(a, c) {
+  // Helper for sidebar items
+  this.getDishPrice = function(dish) {
+    if (!dish) return
+
+    return precisionRound(dish.ingredients.reduce(function(a, c) {
       return a + c.price
-    }, 0);
+    }, 0), 2);
   }
 
 	//Returns the total price of the menu (all the ingredients multiplied by number of guests).
 	this.getTotalMenuPrice = function() {
-	   var menuIngredients = this.getAllIngredients()
-     return menuIngredients.reduce(function(a, c) {
-       return a + c.price * numberOfGuests
-     }, 0);
+	   var menuIngredients = this.getAllIngredients();
+
+     return precisionRound(menuIngredients.reduce(function(a, c) {
+       return a + c.price * numberOfGuests;
+     }, 0), 2)
 	}
 
 	//Adds the passed dish to the menu. If the dish of that type already exists on the menu
 	//it is removed from the menu and the new one added.
 	this.addDishToMenu = function(id) {
     var currentDish = this.getDish(id);
-
-    var dishFound = menu.filter(function(dish) {
-      return dish.type === currentDish.type;
-    });
-
-		if (dishFound) {
-      this.removeDishFromMenu(dishFound.id);
-      menu.push(currentDish);
-    }
+    menu[currentDish.type] = parseInt(id);
+    this.notifyObservers({menu: this.getFullMenu()});
 	}
 
 	//Removes dish from menu
-	this.removeDishFromMenu = function(id) {
-		return menu.filter(function(dish) {
-      return dish.id !== id;
-    });
+	this.removeDishFromMenu = function(type) {
+    menu[type] = null;
+    this.notifyObservers({menu: this.getFullMenu()});
 	}
 
-  this.getEveryDish = function(){
+  this.getEveryDish = function() {
     return dishes;
   }
 
 	//function that returns all dishes of specific type (i.e. "starter", "main dish" or "dessert")
 	//you can use the filter argument to filter out the dish by name or ingredient (use for search)
 	//if you don't pass any filter all the dishes will be returned
-	this.getAllDishes = function (type,filter) {
+	this.getAllDishes = function (type, filter) {
 	  return dishes.filter(function(dish) {
-		var found = true;
-		if(filter){
-			found = false;
-			dish.ingredients.forEach(function(ingredient) {
-				if(ingredient.name.indexOf(filter)!=-1) {
-					found = true;
-				}
-			});
-			if(dish.name.indexOf(filter) != -1)
-			{
-				found = true;
-			}
-		}
+      var found = true;
+
+  		if (filter) {
+  			found = false;
+  			dish.ingredients.forEach(function(ingredient) {
+  				if (ingredient.name.indexOf(filter) != -1) found = true;
+  			});
+
+        if (dish.name.indexOf(filter) != -1) found = true;
+  		}
+
+      if (type == 'all') return found
+
 	  	return dish.type == type && found;
-	  });
+    });
 	}
 
 	//function that returns a dish of specific ID
 	this.getDish = function (id) {
-	  for(key in dishes){
-			if(dishes[key].id == id) {
-				return dishes[key];
-			}
+	  for (var key in dishes) {
+			if (dishes[key].id == id) return dishes[key];
 		}
 	}
 
+  this.addObserver = function(observer) {
+		observers.push(observer)
+	}
+
+	this.notifyObservers = function(result) {
+		observers.map(function(observer) {
+      observer(result);
+    });
+	}
 
 	// the dishes variable contains an array of all the
 	// dishes in the database. each dish has id, name, type,
@@ -124,10 +137,7 @@ var DinnerModel = function() {
 	// can sometimes be empty like in the example of eggs where
 	// you just say "5 eggs" and not "5 pieces of eggs" or anything else.
 	var dishes = [
-    
-    
-    
-{
+    {
 		'id':1,
 		'name':'French toast',
 		'type':'starter',
@@ -159,15 +169,7 @@ var DinnerModel = function() {
 			'unit':'slices',
 			'price':2
 			}]
-		},
-    
-    
-    
-    
-    
-    
-    
-    {
+		},{
 		'id':2,
 		'name':'Sourdough Starter',
 		'type':'starter',

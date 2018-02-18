@@ -24,7 +24,7 @@
       <div id="sidebar" class="sidebar">
         <h3>My dinner</h3>
         <label>
-          Guests: <input id="guests-input" class="guests-input" type="number" value="1" min="0"/>
+          Guests: <input id="guests-input" class="guests-input" type="number" value="1" min="1"/>
         </label>
         <div class="sidebar__separator">
           <span>Dish Name</span>
@@ -39,15 +39,14 @@
           <h3>Find a dish</h3>
 
           <div class="dish-filter">
-            <input class="dish-filter__text" type="text" placeholder="Enter keywords"/>
-            <select class="dish-filter__type" >
-              <option>All</option>
-              <option>Main Course</option>
-              <option>Side Dish</option>
-              <option>Dessert</option>
-              <option>Appetizer</option>
+            <input id="search-filter" class="dish-filter__text" type="text" placeholder="Enter keywords"/>
+            <select id="search-type" class="dish-filter__type" >
+              <option value='all'>All</option>
+              <option value='main dish'>Main Course</option>
+              <option value='dessert'>Dessert</option>
+              <option value='starter'>Appetizer</option>
             </select>
-            <button class="btn btn--primary">Search</button>
+            <button id="search-submit" class="btn btn--primary">Search</button>
           </div>
         </div>
 
@@ -91,7 +90,6 @@
     <script src="js/view/dishItemView.js"></script>
     <script src="js/view/dishDetailsView.js"></script>
     <script src="js/view/dinnerSummaryView.js"></script>
-    <script src="js/view/dinnerSummaryItemView.js"></script>
     <script src="js/view/dinnerPrintView.js"></script>
     <script src="js/view/dinnerPrintItemView.js"></script>
 

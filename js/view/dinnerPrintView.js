@@ -4,13 +4,7 @@
  * @param {Object} model - the reference to the Dinner Model
  */
 var DinnerPrintView = function (container, model) {
-	var menu = model.getFullMenu();
-
 	this.backEdit = container.find('.back-edit');
-
-	menu.map(function(dish) {
-		var dinnerPrintItem = new DinnerPrintItemView(container.find('.dish-print-recipes'), dish);
-	});
 
 	this.show = function() {
 		container.addClass('main--show');
@@ -19,5 +13,17 @@ var DinnerPrintView = function (container, model) {
 	this.hide = function() {
 		container.removeClass('main--show');
 	};
+
+	var render = function() {
+		var $dishPrintRecipes = container.find('.dish-print-recipes');
+
+		$dishPrintRecipes.html('');
+
+		model.getFullMenu().map(function(dish) {
+			var dinnerPrintItem = new DinnerPrintItemView($dishPrintRecipes, dish);
+		});
+	};
+
+	model.addObserver(render);
 }
 

@@ -5,12 +5,9 @@
  */
 var DishSearchView = function (container, model) {
 	this.container = container;
-
-	var dishes = model.getEveryDish();
-
-	for (var key in dishes) {
-		new DishItemView(container.find('.dish-display'), dishes[key]);
-	}
+	this.searchType = container.find('#search-type')
+	this.searchFilter = container.find('#search-filter')
+	this.searchSubmit = container.find('#search-submit');
 
 	this.show = function() {
 		container.addClass('main--show');
@@ -19,5 +16,28 @@ var DishSearchView = function (container, model) {
 	this.hide = function() {
 		container.removeClass('main--show');
 	};
+
+	this.render = function(filteredDishes) {
+		var $dishDisplay = container.find('.dish-display');
+
+		$dishDisplay.html('');
+
+		if (filteredDishes) {
+			var dishes = filteredDishes;
+		} else {
+			var dishes = model.getEveryDish();
+		}
+
+		if (!dishes.length) {
+			$dishDisplay.text('No dish found, try other filters.')
+
+		} else {
+			dishes.map(function(dish) {
+				var dishItem = new DishItemView($dishDisplay, model, dish);
+			});
+		}
+	}
+
+	this.render();
 }
 

@@ -9,4 +9,11 @@ var DishSearchController = function (view, model, appController) {
     appController.currentDishId = $(this).attr('data-dishid');
     appController.changeTo('dishDetails');
   });
+
+  view.searchSubmit.on('click', function() {
+    var dishType = view.searchType.val();
+    var dishFilter = view.searchFilter.val();
+    var filteredDishes = model.getAllDishes(dishType, dishFilter);
+    view.render(filteredDishes);
+  });
 }

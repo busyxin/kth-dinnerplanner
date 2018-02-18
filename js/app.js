@@ -1,35 +1,28 @@
 $(function() {
   var model = new DinnerModel();
 
-  model.numberOfGuests = 3;
-  // Populate menu with some dishes
-  model.addDishToMenu(1);
-  model.addDishToMenu(100);
-  model.addDishToMenu(200);
-
    $('.hamburger-wrapper').on('click', function() {
      $sidebarContainer.toggleClass('sidebar--show');
    });
 
+   var AppController = {
+     currentDishId: null,
+     changeTo: changeTo
+   };
+
   var introView         = new IntroView($('#intro')),
       sidebarView       = new SidebarView($('#sidebar'), model),
       dishSearchView    = new DishSearchView($('#dish-search'), model),
-      dishDetailsView   = new DishDetailsView($('#dish-details'), model, null),
+      dishDetailsView   = new DishDetailsView($('#dish-details'), model, AppController),
       dinnerSummaryView = new DinnerSummaryView($('#dinner-summary'), model),
-      dinnerPrintView   = new DinnerPrintView($('#dinner-print'), model);
+      dinnerPrintView   = new DinnerPrintView($('#dinner-print'), model)
 
-  var AppController = {
-    currentDish: null,
-    changeTo: changeTo
-  };
-
-  var introController         = new IntroController(introView, AppController);
-  var sidebarController       = new SidebarController(sidebarView, model, AppController);
-  var dishSearchController    = new DishSearchController(dishSearchView , model, AppController);
-  var dishDetailsController   = new DishDetailsController(dishDetailsView, model, AppController);
-  var dinnerSummaryController = new DinnerSummaryController(dinnerSummaryView, model, AppController);
-  var dinnerPrintController   = new DinnerPrintController(dinnerPrintView, AppController);
-
+      introController         = new IntroController(introView, AppController),
+      sidebarController       = new SidebarController(sidebarView, model, AppController),
+      dishSearchController    = new DishSearchController(dishSearchView , model, AppController),
+      dishDetailsController   = new DishDetailsController(dishDetailsView, model, AppController),
+      dinnerSummaryController = new DinnerSummaryController(dinnerSummaryView, model, AppController),
+      dinnerPrintController   = new DinnerPrintController(dinnerPrintView, AppController);
 
   function changeTo(viewName) {
     clearView();
@@ -43,7 +36,7 @@ $(function() {
 
       case 'dishDetails':
         sidebarView.show();
-        dishDetailsView.show();
+        dishDetailsView.show(AppController.currentDishId);
         break;
 
       case 'dinnerSummary':

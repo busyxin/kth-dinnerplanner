@@ -159,6 +159,19 @@ label {
   justify-content: space-between;
 }
 
+.selected-dishes__cross {
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1rem;
+  color: #888888;
+  transition: color 0.3s ease;
+}
+
+.selected-dishes__cross:hover {
+  color: #000000;
+}
+
 .guests-input:hover {
   box-shadow: 0 0 1px 1px #FF530D;
 }
@@ -265,6 +278,10 @@ label {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
+}
+
+.dish-confirm-selected {
+  display: flex;
 }
 
 .dish-details {
