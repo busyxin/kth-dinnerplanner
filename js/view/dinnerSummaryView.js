@@ -5,14 +5,26 @@
  */
 var DinnerSummaryView = function (container, model) {
 	var menu = model.getFullMenu();
-	var total = 0;
 
-	for (var key in menu) {
-		var currentPrice = model.getDishPrice(menu[key]);
-		total += currentPrice;
-		new DinnerSummaryItemView(container.find('.dish-confirm'), model, key);
+	this.printDinner = container.find('#print-recipes');
+	this.backEdit 	 = container.find('.back-edit');
+
+	this.render = function() {
+		menu.map(function(dish) {
+			var dishItem = new DishItemView(container.find('.dish-confirm'), dish, true);
+		});
+
+		container.find('#confirm-price').text(model.getTotalMenuPrice());
 	}
 
-	container.find('.confirm-price').text(total);
+	this.render();
+
+	this.show = function() {
+		container.addClass('main--show');
+	};
+
+	this.hide = function() {
+		container.removeClass('main--show');
+	};
 }
 

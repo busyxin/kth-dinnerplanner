@@ -1,16 +1,22 @@
 //DinnerModel Object constructor
 var DinnerModel = function() {
 
-  this.numberOfGuests = 0
+  var numberOfGuests = 0
 
-  this.menu = []
+  // var menu = {
+  //   starter: '',
+  //   maindish: '',
+  //   dessert: ''
+  // }
+
+  var menu = [];
 
 	this.setNumberOfGuests = function(num) {
-    this.numberOfGuests = num;
+    numberOfGuests = num;
 	}
 
 	this.getNumberOfGuests = function() {
-    return this.numberOfGuests;
+    return numberOfGuests;
 	}
 
 	//Returns the dish that is on the menu for selected type
@@ -22,12 +28,12 @@ var DinnerModel = function() {
 
 	//Returns all the dishes on the menu.
 	this.getFullMenu = function() {
-    return this.menu
+    return menu
 	}
 
 	//Returns all ingredients for all the dishes on the menu.
 	this.getAllIngredients = function() {
-    return this.menu.map(function(dish) {
+    return menu.map(function(dish) {
       return dish.ingredients;
     }).reduce(function(a, c) {
       return a.concat(c);
@@ -36,6 +42,8 @@ var DinnerModel = function() {
 
   // Temporary helper for sidebar items
   this.getDishPrice = function(dish) {
+    if (!dish) return;
+
     return dish.ingredients.reduce(function(a, c) {
       return a + c.price
     }, 0);
@@ -45,7 +53,7 @@ var DinnerModel = function() {
 	this.getTotalMenuPrice = function() {
 	   var menuIngredients = this.getAllIngredients()
      return menuIngredients.reduce(function(a, c) {
-       return a + c.price * this.getNumberOfGuests()
+       return a + c.price * numberOfGuests
      }, 0);
 	}
 
@@ -54,19 +62,19 @@ var DinnerModel = function() {
 	this.addDishToMenu = function(id) {
     var currentDish = this.getDish(id);
 
-    var dishFound = this.menu.filter(function(dish) {
+    var dishFound = menu.filter(function(dish) {
       return dish.type === currentDish.type;
     });
 
 		if (dishFound) {
       this.removeDishFromMenu(dishFound.id);
-      this.menu.push(currentDish);
+      menu.push(currentDish);
     }
 	}
 
 	//Removes dish from menu
 	this.removeDishFromMenu = function(id) {
-		return this.menu.filter(function(dish) {
+		return menu.filter(function(dish) {
       return dish.id !== id;
     });
 	}
@@ -115,7 +123,11 @@ var DinnerModel = function() {
 	// defining the unit i.e. "g", "slices", "ml". Unit
 	// can sometimes be empty like in the example of eggs where
 	// you just say "5 eggs" and not "5 pieces of eggs" or anything else.
-	var dishes = [{
+	var dishes = [
+    
+    
+    
+{
 		'id':1,
 		'name':'French toast',
 		'type':'starter',
@@ -147,7 +159,15 @@ var DinnerModel = function() {
 			'unit':'slices',
 			'price':2
 			}]
-		},{
+		},
+    
+    
+    
+    
+    
+    
+    
+    {
 		'id':2,
 		'name':'Sourdough Starter',
 		'type':'starter',

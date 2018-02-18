@@ -3,23 +3,72 @@
  * @param {jQuery object} container - references #dish-search
  * @param {Object} model - the reference to the Dinner Model
  */
-var DishDetailsView = function (container, selectedDish) {
-	var $dish = $("<div class='dish-content'><div class='dish-details'><h2>" + selectedDish.name + "</h2><img class='dish-image' src='./images/" + selectedDish.image + "'/><p>" + selectedDish.description + "</p><button class='btn btn--primary back-dish-display' >Back to Search</button><h2>Preparation</h2><p>" + selectedDish.description + "</p></div></div>");
-	var $ingredients = $("<div class='dish-ingredients'><h3>Ingredients for 3 people</h3></div>");
-	var $ingredientsList = $("<ul class='ingredients-list'></ul>");
-	var totalPrice = 0;
+var DishDetailsView = function (container, model, dish) {
+	this.render = function() {
 
-	//TODO Refactor to use the getDishPrice
-	for (var key in selectedDish.ingredients) {
-		var $currentIngredient = selectedDish.ingredients[key];
-		totalPrice += $currentIngredient.price;
-		$ingredientsList.append($("<li class='ingredient'><span class='ingredient-quantity'>" + $currentIngredient.quantity + " " + $currentIngredient.unit + "</span><span class='ingredient-name'>" + $currentIngredient.name + "</span><span class='currency'>SEK " + $currentIngredient.price + "</span>"));
+		if (!dish) return
+
+		var $dish = $(`
+			<div class='dish-content'>
+				<div class='dish-details'>
+					<h2>${dish.name}</h2>
+					<img class='dish-image' src='./images/${dish.image}'/>
+					<p>${dish.description}</p>
+					<button class='btn btn--primary back-dish-display'>Back to Search</button>
+					<h2>Preparation</h2>
+					<p>${dish.description}</p>
+				</div>
+			</div>
+		`);
+
+		var $ingredients = $(`
+			<div class='dish-ingredients'>
+				<h3>Ingredients for 3 people</h3>
+			</div>
+		`);
+
+		var $ingredientsList = $(`
+			<ul class='ingredients-list'></ul>
+		`);
+
+		var $ingredientsTotal = $(`
+			<div class='ingredients-total'>
+				<button class='btn btn--primary'>Add to cart</button>
+				<span><strong>TOTAL:</strong> SEK ${model.getTotalMenuPrice()}</span>
+			</div>
+		`);
+
+		var createIngredient = function createIngredient(ingredient) {
+			return $(`
+				<li class='ingredient'>
+					<span class='ingredient-quantity'>${ingredient.quantity} ${ingredient.unit}</span>
+					<span class='ingredient-name'>${ingredient.name}</span>
+					<span class='currency'>SEK ${ingredient.price}</span>
+				</li>
+			`);
+		};
+
+		dish.ingredients.map(function(ingredient) {
+			$ingredientsList.append(createIngredient(ingredient));
+		});
+
+		$ingredientsList.append($ingredientsTotal);
+
+		$ingredients.append($ingredientsList);
+
+		$dish.append($ingredients);
+
+		container.html($dish);
 	}
 
-	$ingredientsList.append($("<div class='ingredients-total'><button class='btn btn--primary'>Add to cart</button><span><strong>TOTAL:</strong> SEK " + totalPrice + "</span></div>"));
-	$ingredients.append($ingredientsList);
-	$dish.append($ingredients);
+	this.show = function() {
+		container.addClass('main--show');
+		this.render();
+	};
 
-	container.html($dish);
+	this.hide = function() {
+		container.removeClass('main--show');
+	};
+
+	this.render();
 }
-

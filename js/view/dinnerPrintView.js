@@ -6,8 +6,18 @@
 var DinnerPrintView = function (container, model) {
 	var menu = model.getFullMenu();
 
-	for (var key in menu) {
-		new DinnerPrintItemView(container.find('.dish-print-recipes'), menu[key]);
-	}
+	this.backEdit = container.find('.back-edit');
+
+	menu.map(function(dish) {
+		var dinnerPrintItem = new DinnerPrintItemView(container.find('.dish-print-recipes'), dish);
+	});
+
+	this.show = function() {
+		container.addClass('main--show');
+	};
+
+	this.hide = function() {
+		container.removeClass('main--show');
+	};
 }
 
