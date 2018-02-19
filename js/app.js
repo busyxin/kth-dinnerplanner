@@ -2,7 +2,7 @@ $(function() {
   var model = new DinnerModel();
 
    $('.hamburger-wrapper').on('click', function() {
-     $sidebarContainer.toggleClass('sidebar--show');
+     $('#sidebar').toggleClass('sidebar--show');
    });
 
    var AppController = {
