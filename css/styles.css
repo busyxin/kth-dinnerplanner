@@ -369,8 +369,6 @@ label {
   }
 
   .sidebar {
-    display: block;
-    position: relative;
     flex: 1 0 auto;
   }
 
