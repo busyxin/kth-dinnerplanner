@@ -54,6 +54,9 @@ var SidebarView = function (container, model) {
     if (result.menu || result.guests) render();
   }
 
+  // Executes initial render
+  render();
+
   // Registers the update method to be executed on notifyObservers
   model.addObserver(update);
 }
