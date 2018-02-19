@@ -4,32 +4,52 @@
  * @param {Object} model - the reference to the Dinner Model
  */
 var DinnerSummaryView = function (container, model) {
-	this.printDinner = container.find('#print-recipes');
-	this.backEdit 	 = container.find('.back-edit');
+  // Exposes the #print-recipes and the .back-edit buttons
+  // for the DinnerSummaryController to access
+  this.printDinner = container.find('#print-recipes');
+  this.backEdit 	 = container.find('.back-edit');
 
-	this.show = function() {
-		container.addClass('main--show');
-	};
+  // Method to show the DinnerSummaryView using css via class appending
+  this.show = function() {
+    container.addClass('main--show');
+  };
 
-	this.hide = function() {
-		container.removeClass('main--show');
-	};
+  // Method to hide the DinnerSummaryView using css via class removal
+  this.hide = function() {
+    container.removeClass('main--show');
+  };
 
-	var render = function() {
-		var menu = model.getFullMenu();
-		var $dishConfirmSelected = container.find('.dish-confirm-selected');
-		var $guestAmount = container.find('.guest-amount');
+  // Render method
+  var render = function() {
+    // Gets the 3 course menu from the Dinner model
+    var menu = model.getFullMenu();
 
-		$dishConfirmSelected.html('');
-		$guestAmount.text(`${model.getNumberOfGuests()} people`);
+    // Finds the .dish-confirm-selected container and the .guest-amount text holder
+    var $dishConfirmSelected = container.find('.dish-confirm-selected');
+    var $guestAmount = container.find('.guest-amount');
 
-		menu.map(function(dish) {
-			var dishItem = new DishItemView($dishConfirmSelected, model, dish, true);
-		});
+    // Flushes old content from .dish-confirm-selected
+    $dishConfirmSelected.html('');
 
-		container.find('#confirm-price').text(model.getTotalMenuPrice());
-	}
+    // Updates the content from .guest-amount with the correct number of guests
+    $guestAmount.text(`${model.getNumberOfGuests()} people`);
 
-	model.addObserver(render);
+    // Iterates through each dish from the 3 course menu
+    // Each DishItemView will receive the corresponding dish
+    // and will append the view on .dish-confirm-selected
+    // and the 4th withPrice parameter is true to force the item to display the price
+    menu.map(function(dish) {
+      var dishItem = new DishItemView($dishConfirmSelected, model, dish, true);
+    });
+
+    // Updates the content from #confirm-price with the total menu price
+    container.find('#confirm-price').text(model.getTotalMenuPrice());
+  }
+
+  // Executes initial render
+  render();
+
+  // Registers the render method to be executed on notifyObservers
+  model.addObserver(render);
 }
 

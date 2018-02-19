@@ -4,40 +4,53 @@
  * @param {Object} model - the reference to the Dinner Model
  */
 var DishSearchView = function (container, model) {
-	this.container = container;
-	this.searchType = container.find('#search-type')
-	this.searchFilter = container.find('#search-filter')
-	this.searchSubmit = container.find('#search-submit');
+  // Expose the container #dish-details, the #search-type select,
+  // the #search-filter textInput and the #search-submit button
+  // for the DishSearchController to access
+  this.container = container;
+  this.searchType = container.find('#search-type')
+  this.searchFilter = container.find('#search-filter')
+  this.searchSubmit = container.find('#search-submit');
 
-	this.show = function() {
-		container.addClass('main--show');
-	};
+  // Method to show the DishSearchView using css via class appending
+  this.show = function() {
+    container.addClass('main--show');
+  };
 
-	this.hide = function() {
-		container.removeClass('main--show');
-	};
+  // Method to hide the DishSearchView using css via class removal
+  this.hide = function() {
+    container.removeClass('main--show');
+  };
 
-	this.render = function(filteredDishes) {
-		var $dishDisplay = container.find('.dish-display');
+  // Render method
+  this.render = function(filteredDishes) {
+    // Finds the .dish-display container
+    var $dishDisplay = container.find('.dish-display');
 
-		$dishDisplay.html('');
+    // Flushes old content from .dish-display
+    $dishDisplay.html('');
 
-		if (filteredDishes) {
-			var dishes = filteredDishes;
-		} else {
-			var dishes = model.getEveryDish();
-		}
+    // If there are filteredDishes passed by the dishSearchController
+    // display those, else all the dishes from the Dinner model should be displayed
+    if (filteredDishes) {
+      var dishes = filteredDishes;
+    } else {
+      var dishes = model.getEveryDish();
+    }
 
-		if (!dishes.length) {
-			$dishDisplay.text('No dish found, try other filters.')
+    // When there are filteredDishes but the Array is empty (no match)
+    if (!dishes.length) {
+      $dishDisplay.text('No dish found, try other filters.')
 
-		} else {
-			dishes.map(function(dish) {
-				var dishItem = new DishItemView($dishDisplay, model, dish);
-			});
-		}
-	}
+    // When there are dishes to be displayed, create each dish item
+    // by iterating through dishes
+    } else {
+      dishes.map(function(dish) {
+        var dishItem = new DishItemView($dishDisplay, model, dish);
+      });
+    }
+  }
 
-	this.render();
+  this.render();
 }
 

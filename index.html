@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dinner planner</title>
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
@@ -53,17 +53,9 @@
         <div class="dish-display"></div>
       </div>
 
-      <div id="dish-details" class="main main--hidden"></div>
+      <div id="dish-details" class="main"></div>
 
-      <div id="dinner-print" class="main main--hidden">
-        <div class="dish-confirm__header">
-          <h3>My dinner: <span class='guest-amount'></span></h3>
-          <button class="btn btn--primary back-edit">Go Back and edit dinner</button>
-        </div>
-        <div class="dish-print-recipes"></div>
-      </div>
-
-      <div id="dinner-summary" class="main main--hidden">
+      <div id="dinner-summary" class="main">
         <div class="dish-confirm__header">
           <h3>My dinner: <span class='guest-amount'></span></h3>
           <button class="btn btn--primary back-edit">Go Back and edit dinner</button>
@@ -73,6 +65,14 @@
           <div class="dish-confirmg-selected__total">Total: SEK <span id="confirm-price"></span></div>
         </div>
         <div class="dish-print"><button id="print-recipes" class="btn btn--primary">Print Full Recipes</button></div>
+      </div>
+
+      <div id="dinner-print" class="main">
+        <div class="dish-confirm__header">
+          <h3>My dinner: <span class='guest-amount'></span></h3>
+          <button class="btn btn--primary back-edit">Go Back and edit dinner</button>
+        </div>
+        <div class="dish-print-recipes"></div>
       </div>
 
     </div>
