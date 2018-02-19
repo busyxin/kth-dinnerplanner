@@ -18,8 +18,10 @@ var DinnerSummaryView = function (container, model) {
 	var render = function() {
 		var menu = model.getFullMenu();
 		var $dishConfirmSelected = container.find('.dish-confirm-selected');
+		var $guestAmount = container.find('.guest-amount');
 
 		$dishConfirmSelected.html('');
+		$guestAmount.text(`${model.getNumberOfGuests()} people`);
 
 		menu.map(function(dish) {
 			var dishItem = new DishItemView($dishConfirmSelected, model, dish, true);

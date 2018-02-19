@@ -12,7 +12,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 .container-fluid {
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  flex: 1 0 auto;
   margin: 0;
   padding: 0;
 }
@@ -111,11 +112,8 @@ input[type=number]::-webkit-outer-spin-button {
   flex: .25;
   border-right: 1px solid #DADADA;
   padding: 0 2rem;
-  position: fixed;
   z-index: 1;
   background: white;
-  left: 0;
-  right: 0;
 }
 
 .sidebar--show {
@@ -373,6 +371,10 @@ label {
     /* display: block; */
     position: relative;
     flex: 1 0 auto;
+  }
+
+  .container-fluid {
+    flex-direction: row;
   }
 
   .app-main {

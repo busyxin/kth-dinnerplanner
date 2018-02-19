@@ -16,8 +16,10 @@ var DinnerPrintView = function (container, model) {
 
 	var render = function() {
 		var $dishPrintRecipes = container.find('.dish-print-recipes');
+		var $guestAmount = container.find('.guest-amount');
 
 		$dishPrintRecipes.html('');
+		$guestAmount.text(`${model.getNumberOfGuests()} people`);
 
 		model.getFullMenu().map(function(dish) {
 			var dinnerPrintItem = new DinnerPrintItemView($dishPrintRecipes, dish);
