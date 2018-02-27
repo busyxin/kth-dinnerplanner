@@ -18,11 +18,15 @@ var SidebarController = function (view, model, appController) {
   // On confirm it removes the dish from the Dinner model menu
   view.selectedDishes.on('click', '.remove-dish', function() {
     var dishId = $(this).attr('data-dishid');
-    var dish = model.getDish(dishId);
-
-    if (window.confirm(`Are you sure you want to remove ${dish.title} from the menu?`)) {
-      model.removeDishFromMenu(dish.type);
+    var onSuccessCallback = function(dish) {
+      if (window.confirm(`Are you sure you want to remove the dish from the menu?`)) {
+        model.removeDishFromMenu(dish.dishTypes[0]);
+      }
     }
+    var onErrorCallback = function(error) {
+      windows.alert(error)
+    }
+    var dish = model.getDish(dishId, onSuccessCallback);
   });
 
   // Adds a click event listener to the #confirm-dinner button to transition to the DinnerSummaryView

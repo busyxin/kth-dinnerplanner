@@ -74,10 +74,27 @@ var DinnerModel = function() {
     var total = 0;
 
     for (var key in menu) {
-      total += this.getDishPrice(menu[key]);
+      if (menu[key]) total += this.getDishPrice(menu[key]);
     }
 
     return total;
+  }
+
+  //Todo change this
+  this.reduceDishType = function(type) {
+    return {
+      "appetizer": "starter",
+			"main course": "main dish",
+			"side dish": "starter",
+			"dessert": "dessert",
+			"salad": "starter",
+			"bread": "starter",
+			"breakfast": "main dish",
+			"soup": "starter",
+			"beverage": "starter",
+			"sauce": "starter",
+			"drink": "starter"
+    }[type]
   }
 
   // Adds the passed dish to the menu. If the dish of that type already exists on the menu
@@ -87,7 +104,7 @@ var DinnerModel = function() {
     var that = this;
 
     var onSuccessCallback = function(dish) {
-      menu[dish.type] = dish;
+      menu[that.reduceDishType(dish.dishTypes[0])] = dish;
       that.notifyObservers({menu: that.getFullMenu()});
     }
 
@@ -101,7 +118,7 @@ var DinnerModel = function() {
   // Removes dish from menu
   // notifies observers about the change in the menu
   this.removeDishFromMenu = function(type) {
-    menu[type] = null;
+    menu[this.reduceDishType(type)] = null;
     this.notifyObservers({menu: this.getFullMenu()});
   }
 
@@ -115,11 +132,11 @@ var DinnerModel = function() {
     }
 
     if (type && type !== 'all') {
-      data['type'] = encodeURIComponent(type);
+      data['type'] = type;
     }
 
     if (filter && filter !== '') {
-      data['query'] = encodeURIComponent(filter);
+      data['query'] = filter;
     }
 
     $.ajax( {
@@ -127,7 +144,7 @@ var DinnerModel = function() {
       headers: {
         'X-Mashape-Key': 'Qu9grxVNWpmshA4Kl9pTwyiJxVGUp1lKzrZjsnghQMkFkfA4LB'
       },
-      type: "get", //send it through get method
+      type: "get",
       data: data,
       success: callback,
       error: errorCallback
@@ -142,10 +159,7 @@ var DinnerModel = function() {
         'X-Mashape-Key': 'Qu9grxVNWpmshA4Kl9pTwyiJxVGUp1lKzrZjsnghQMkFkfA4LB'
       },
       type: "get",
-      success: function(dish){
-        console.log(dish);
-        callback(dish)
-      },
+      success: callback,
       error: errorCallback
     });
   }

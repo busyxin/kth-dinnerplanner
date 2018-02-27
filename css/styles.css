@@ -158,6 +158,10 @@ label {
   justify-content: space-between;
 }
 
+.selected-dishes__item span {
+  max-width: 130px;
+}
+
 .selected-dishes__cross {
   font-weight: bold;
   cursor: pointer;

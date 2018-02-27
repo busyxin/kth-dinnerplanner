@@ -26,6 +26,9 @@ var DishDetailsView = function (container, model, appController) {
     // Prevent render when there is no currentDishId (viewing selected dish)
     if (!appController.currentDishId) return;
 
+    // Add loader here
+    container.html('LOADING...');
+
     // Gets the number of guests from the Dinner model
     var guests = model.getNumberOfGuests();
 
@@ -43,7 +46,6 @@ var DishDetailsView = function (container, model, appController) {
     // <span class='currency'>SEK ${ingredient.price * guests}</span>
 
     var onSuccessCallback = function(dish) {
-      console.log(dish)
   
       // Dynamically creates the different dish details view components
       var $dish = $(`
