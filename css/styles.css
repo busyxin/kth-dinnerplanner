@@ -252,6 +252,11 @@ label {
   width: 140px;
 }
 
+.dish-image--big {
+  height: 200px;
+  margin-bottom: 2rem;
+}
+
 .dish-content {
   display: flex;
   flex-direction: column;

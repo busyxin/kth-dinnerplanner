@@ -20,7 +20,7 @@ var SidebarController = function (view, model, appController) {
     var dishId = $(this).attr('data-dishid');
     var dish = model.getDish(dishId);
 
-    if (window.confirm(`Are you sure you want to remove ${dish.name} from the menu?`)) {
+    if (window.confirm(`Are you sure you want to remove ${dish.title} from the menu?`)) {
       model.removeDishFromMenu(dish.type);
     }
   });

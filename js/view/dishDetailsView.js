@@ -26,66 +26,78 @@ var DishDetailsView = function (container, model, appController) {
     // Prevent render when there is no currentDishId (viewing selected dish)
     if (!appController.currentDishId) return;
 
-    // Gets dish from the Dinner model using the saved currentDishId
-    // from the General Appplication controller
-    var dish = model.getDish(appController.currentDishId);
-
     // Gets the number of guests from the Dinner model
     var guests = model.getNumberOfGuests();
-
-    // Dynamically creates the different dish details view components
-    var $dish = $(`
-      <div class='dish-content'>
-        <div class='dish-details'>
-          <h2>${dish.name}</h2>
-          <img class='dish-image' src='./images/${dish.image}'/>
-          <p>${dish.description}</p>
-          <button class='btn btn--primary back-edit'>Back to Search</button>
-          <h2>Preparation</h2>
-          <p>${dish.description}</p>
-        </div>
-      </div>
-    `);
-
-    var $ingredients = $(`
-      <div class='dish-ingredients'>
-        <h3>Ingredients for ${model.getNumberOfGuests()} people</h3>
-      </div>
-    `);
-
-    var $ingredientsList = $(`
-      <ul class='ingredients-list'></ul>
-    `);
-
-    var $ingredientsTotal = $(`
-      <div class='ingredients-total'>
-        <button id='add-to-cart' class='btn btn--primary' data-dishid='${dish.id}'>Add to cart</button>
-        <span><strong>TOTAL:</strong> SEK ${model.getDishPrice(dish) * guests}</span>
-      </div>
-    `);
 
     var createIngredient = function createIngredient(ingredient) {
       return $(`
         <li class='ingredient'>
-          <span class='ingredient-quantity'>${ingredient.quantity * guests} ${ingredient.unit}</span>
+          <span class='ingredient-quantity'>${ingredient.amount * guests} ${ingredient.unit}s</span>
           <span class='ingredient-name'>${ingredient.name}</span>
-          <span class='currency'>SEK ${ingredient.price * guests}</span>
+
         </li>
       `);
     };
 
-    dish.ingredients.map(function(ingredient) {
-      $ingredientsList.append(createIngredient(ingredient));
-    });
+    // Take out price now
+    // <span class='currency'>SEK ${ingredient.price * guests}</span>
 
-    $ingredientsList.append($ingredientsTotal);
+    var onSuccessCallback = function(dish) {
+      console.log(dish)
+  
+      // Dynamically creates the different dish details view components
+      var $dish = $(`
+        <div class='dish-content'>
+          <div class='dish-details'>
+            <h2>${dish.title}</h2>
+            <img class='dish-image--big' src='${dish.image}'/>
+            <p>${dish.instructions}</p>
+            <button class='btn btn--primary back-edit'>Back to Search</button>
+            <h2>Preparation</h2>
+            <p>${dish.instructions}</p>
+          </div>
+        </div>
+      `);
 
-    $ingredients.append($ingredientsList);
+      
+      var $ingredients = $(`
+        <div class='dish-ingredients'>
+          <h3>Ingredients for ${guests} people</h3>
+        </div>
+      `);
 
-    $dish.append($ingredients);
+      var $ingredientsList = $(`
+        <ul class='ingredients-list'></ul>
+      `);
 
-    // Update the container content with the Dish details elements
-    container.html($dish);
+      var $ingredientsTotal = $(`
+        <div class='ingredients-total'>
+          <button id='add-to-cart' class='btn btn--primary' data-dishid='${dish.id}'>Add to cart</button>
+          <span><strong>TOTAL:</strong> SEK ${model.getDishPrice(dish)}</span>
+        </div>
+      `);
+
+      dish.extendedIngredients.map(function(ingredient) {
+        $ingredientsList.append(createIngredient(ingredient));
+      });
+
+      $ingredientsList.append($ingredientsTotal);
+
+      $ingredients.append($ingredientsList);
+
+      $dish.append($ingredients);
+
+      // Update the container content with the Dish details elements
+      container.html($dish);
+    }
+
+    var onErrorCallback = function(error) {
+      windows.alert(error)
+    }
+
+    // Gets dish from the Dinner model using the saved currentDishId
+    // from the General Appplication controller
+    var dish = model.getDish(appController.currentDishId, onSuccessCallback, onErrorCallback);
   };
 
   // Update method, triggers render only when number of guests are updated

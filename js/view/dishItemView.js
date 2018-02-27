@@ -9,8 +9,8 @@ var DishItemView = function (container, model, dish, withPrice) {
   // Create the view for a dish item
   var newDishItem = $(`
     <div class='dish-wrapper' data-dishid='${dish.id}'>
-      <img class='dish-image' src='./images/${dish.image}'/>
-      <div class='dish-name'>${dish.name}</div>
+      <img class='dish-image' src='https://spoonacular.com/recipeImages/${dish.image}'/>
+      <div class='dish-name'>${dish.title}</div>
     </div>
   `);
 
@@ -18,7 +18,7 @@ var DishItemView = function (container, model, dish, withPrice) {
   if (withPrice) {
     newDishItem.append($(`
       <div class='dish-price'>
-        ${model.getDishPrice(dish) * model.getNumberOfGuests()}
+        ${model.getDishPrice(dish)}
       </div>
     `));
   }

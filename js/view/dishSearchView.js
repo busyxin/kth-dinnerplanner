@@ -23,32 +23,44 @@ var DishSearchView = function (container, model) {
   };
 
   // Render method
-  this.render = function(filteredDishes) {
+  this.render = function(dishType, dishFilter) {
     // Finds the .dish-display container
     var $dishDisplay = container.find('.dish-display');
+    var type = dishType ? dishType : this.searchType.val();
+    var filter = dishFilter ? dishFilter : this.searchFilter.val();
 
-    // Flushes old content from .dish-display
-    $dishDisplay.html('');
+    // Add loader here
+    $dishDisplay.html('LOADING...');
 
-    // If there are filteredDishes passed by the dishSearchController
-    // display those, else all the dishes from the Dinner model should be displayed
-    if (filteredDishes) {
-      var dishes = filteredDishes;
-    } else {
-      var dishes = model.getEveryDish();
+    var onSuccessCallback = function(data) {
+      // Flushes old content from .dish-display
+      $dishDisplay.html('');
+      if (data.results && data.results.length !== 0) {
+        var dishes = data.results;
+
+        dishes.map(function(dish) {
+          var dishItem = new DishItemView($dishDisplay, model, dish);
+        });
+      } else {
+        $dishDisplay.text('No dish found, try other filters.')            
+      }
+    }
+  
+    var onErrorCallback = function(error) {
+      window.alert(error);
     }
 
-    // When there are filteredDishes but the Array is empty (no match)
-    if (!dishes.length) {
-      $dishDisplay.text('No dish found, try other filters.')
+    var dishes = model.getAllDishes(type, filter, onSuccessCallback, onErrorCallback);
+  }
 
-    // When there are dishes to be displayed, create each dish item
-    // by iterating through dishes
-    } else {
-      dishes.map(function(dish) {
-        var dishItem = new DishItemView($dishDisplay, model, dish);
-      });
-    }
+  this.onSuccessCallback = function(dishes) {
+    dishes.map(function(dish) {
+      var dishItem = new DishItemView($dishDisplay, model, dish);
+    });
+  }
+
+  this.onErrorCallback = function() {
+    $dishDisplay.text('No dish found, try other filters.')    
   }
 
   this.render();

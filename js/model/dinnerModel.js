@@ -37,7 +37,7 @@ var DinnerModel = function() {
 
     for (var type in menu) {
       if (menu[type]) {
-        var dish = this.getDish(menu[type]);
+        var dish = menu[type];
         dishArray.push(dish);
       }
     }
@@ -65,27 +65,37 @@ var DinnerModel = function() {
   this.getDishPrice = function(dish) {
     if (!dish) return
 
-    return precisionRound(dish.ingredients.reduce(function(a, c) {
-      return a + c.price
-    }, 0), 2);
+    return precisionRound(dish.pricePerServing * numberOfGuests);
   }
 
   // Returns the total price of the menu (all the ingredients multiplied by number of guests).
   this.getTotalMenuPrice = function() {
-     var menuIngredients = this.getAllIngredients();
 
-     return precisionRound(menuIngredients.reduce(function(a, c) {
-       return a + c.price * numberOfGuests;
-     }, 0))
+    var total = 0;
+
+    for (var key in menu) {
+      total += this.getDishPrice(menu[key]);
+    }
+
+    return total;
   }
 
   // Adds the passed dish to the menu. If the dish of that type already exists on the menu
   // it is removed from the menu and the new one added.
   // notifies observers about the change in the menu
-  this.addDishToMenu = function(id) {
-    var currentDish = this.getDish(id);
-    menu[currentDish.type] = parseInt(id);
-    this.notifyObservers({menu: this.getFullMenu()});
+  this.addDishToMenu = function(dishId) {
+    var that = this;
+
+    var onSuccessCallback = function(dish) {
+      menu[dish.type] = dish;
+      that.notifyObservers({menu: that.getFullMenu()});
+    }
+
+    var onErrorCallback = function(error) {
+      windows.alert(error);
+    }
+
+    this.getDish(dishId, onSuccessCallback, onErrorCallback);
   }
 
   // Removes dish from menu
@@ -95,38 +105,49 @@ var DinnerModel = function() {
     this.notifyObservers({menu: this.getFullMenu()});
   }
 
-  // Returns all the dishes from the Dinner Model
-  this.getEveryDish = function() {
-    return dishes;
-  }
-
   // Function that returns all dishes of specific type (i.e. "starter", "main dish" or "dessert")
   // you can use the filter argument to filter out the dish by name or ingredient (use for search)
   // if you don't pass any filter all the dishes will be returned
-  this.getAllDishes = function (type, filter) {
-    return dishes.filter(function(dish) {
-      var found = true;
+  this.getAllDishes = function (type, filter, callback, errorCallback) {
 
-      if (filter) {
-        found = false;
-        dish.ingredients.forEach(function(ingredient) {
-          if (ingredient.name.indexOf(filter) != -1) found = true;
-        });
+    var data = {
+      'instructionsRequired': true
+    }
 
-        if (dish.name.indexOf(filter) != -1) found = true;
-      }
+    if (type && type !== 'all') {
+      data['type'] = encodeURIComponent(type);
+    }
 
-      if (type == 'all') return found
+    if (filter && filter !== '') {
+      data['query'] = encodeURIComponent(filter);
+    }
 
-      return dish.type == type && found;
+    $.ajax( {
+      url: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search',
+      headers: {
+        'X-Mashape-Key': 'Qu9grxVNWpmshA4Kl9pTwyiJxVGUp1lKzrZjsnghQMkFkfA4LB'
+      },
+      type: "get", //send it through get method
+      data: data,
+      success: callback,
+      error: errorCallback
     });
   }
 
   // Returns a dish of specific ID
-  this.getDish = function (id) {
-    for (var key in dishes) {
-      if (dishes[key].id == id) return dishes[key];
-    }
+  this.getDish = function (id, callback, errorCallback) {
+    $.ajax( {
+      url: `https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/${id}/information`,
+      headers: {
+        'X-Mashape-Key': 'Qu9grxVNWpmshA4Kl9pTwyiJxVGUp1lKzrZjsnghQMkFkfA4LB'
+      },
+      type: "get",
+      success: function(dish){
+        console.log(dish);
+        callback(dish)
+      },
+      error: errorCallback
+    });
   }
 
   // Add an observer to the array of observers

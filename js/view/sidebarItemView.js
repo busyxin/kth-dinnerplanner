@@ -7,7 +7,7 @@ var SidebarItemView = function (container, model, dish) {
   // Create the view for a dish item
   var newDishItem = $(`
     <li class='selected-dishes__item'>
-      <span>${dish.name}</span><span>${model.getDishPrice(dish) * model.getNumberOfGuests()} <span class='remove-dish selected-dishes__cross' data-dishid='${dish.id}'>&times;</span></span>
+      <span>${dish.title}</span><span>${model.getDishPrice(dish)} <span class='remove-dish selected-dishes__cross' data-dishid='${dish.id}'>&times;</span></span>
     </li>
   `);
 

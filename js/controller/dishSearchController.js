@@ -19,7 +19,6 @@ var DishSearchController = function (view, model, appController) {
   view.searchSubmit.on('click', function() {
     var dishType = view.searchType.val();
     var dishFilter = view.searchFilter.val();
-    var filteredDishes = model.getAllDishes(dishType, dishFilter);
-    view.render(filteredDishes);
+    view.render(dishType, dishFilter);
   });
 }
