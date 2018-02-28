@@ -47,7 +47,7 @@ var DishSearchView = function (container, model) {
     }
   
     var onErrorCallback = function(error) {
-      window.alert(error);
+      window.alert("The request has not been processed. The dishes couldn't be fetched from the server.")
     }
 
     var dishes = model.getAllDishes(type, filter, onSuccessCallback, onErrorCallback);

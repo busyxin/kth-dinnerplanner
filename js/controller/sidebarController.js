@@ -24,7 +24,7 @@ var SidebarController = function (view, model, appController) {
       }
     }
     var onErrorCallback = function(error) {
-      windows.alert(error)
+      window.alert("The request has not been processed.")
     }
     var dish = model.getDish(dishId, onSuccessCallback);
   });

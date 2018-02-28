@@ -109,7 +109,7 @@ var DinnerModel = function() {
     }
 
     var onErrorCallback = function(error) {
-      windows.alert(error);
+      window.alert("The dish couldn't be added to the menu.")
     }
 
     this.getDish(dishId, onSuccessCallback, onErrorCallback);

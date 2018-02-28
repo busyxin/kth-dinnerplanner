@@ -60,7 +60,6 @@ var DishDetailsView = function (container, model, appController) {
           </div>
         </div>
       `);
-
       
       var $ingredients = $(`
         <div class='dish-ingredients'>
@@ -94,7 +93,7 @@ var DishDetailsView = function (container, model, appController) {
     }
 
     var onErrorCallback = function(error) {
-      windows.alert(error)
+      window.alert("The request has not been processed. The dish couldn't be fetched from the server.")
     }
 
     // Gets dish from the Dinner model using the saved currentDishId
